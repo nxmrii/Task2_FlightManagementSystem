@@ -6,6 +6,7 @@ namespace FlightManagementSystem.Models
 {
     internal class Aircraft
     {
+        //02 CLASS MODELS & PROPERTIES
         public int aircraftId {  get; set; }
         public string model {  get; set; }
         public int totalSeats { get; set; }
