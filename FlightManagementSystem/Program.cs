@@ -94,10 +94,44 @@ namespace FlightManagementSystem
 
 
         //03 Register a Pilot
+        public static void registerPiolt()
+        {
+            Console.WriteLine("Enter Piolt name: ");
+            string pioltname = Console.ReadLine();
+            //validation
+            if (pioltname == null)
+            {
+                Console.WriteLine("Pilot name cannot be empty.");
+                return;
+            }
+
+
+            Console.WriteLine("Enter Piolt phone: ");
+            string pioltphone = Console.ReadLine();
+
+            Console.WriteLine("Enter License number: ");
+            string licensnum = Console.ReadLine();
 
 
 
 
+            int pioltID = context.Pilots.Count + 1;
+            context.Pilots.Add(
+                new Pilot
+                {
+                    pilotId = pioltID,
+                    pilotName = pioltname,
+                    pilotPhone = pioltphone,
+                    licenseNumber = licensnum,
+                    flightHours = 0,
+                    isAvailable = true
+                }
+        );
+
+            Console.WriteLine("Pilot registered successfully!");
+            Console.WriteLine($"Pilot ID: {pioltID}");
+
+        }
 
 
 
@@ -151,7 +185,8 @@ namespace FlightManagementSystem
                     case 2:
                         AddAircraft();
                         break;
-                    case 3: 
+                    case 3:
+                        registerPiolt();
                         break;
                     case 4: 
                         break;
