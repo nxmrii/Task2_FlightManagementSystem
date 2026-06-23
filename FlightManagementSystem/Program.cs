@@ -186,10 +186,10 @@ namespace FlightManagementSystem
             {
                 Console.WriteLine("Flight Management System");
                 Console.WriteLine("========================================");
-                Console.WriteLine(" 1. Register a Passenger");
-                Console.WriteLine(" 2. Add an Aircraf");
-                Console.WriteLine(" 3. Register a Pilot");
-                Console.WriteLine(" 4. View All Flights");
+                Console.WriteLine(" 1. Register a Passenger"); //done
+                Console.WriteLine(" 2. Add an Aircraf"); //done
+                Console.WriteLine(" 3. Register a Pilot"); //done
+                Console.WriteLine(" 4. View All Flights"); //done
                 Console.WriteLine(" 5. Schedule a Flight");
                 Console.WriteLine(" 6. Book a Flight");
                 Console.WriteLine(" 7. Cancel a Booking");
