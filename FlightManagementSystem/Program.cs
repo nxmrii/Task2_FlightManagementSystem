@@ -15,7 +15,7 @@ namespace FlightManagementSystem
         };
 
 
-        //01 Register a Passenger
+        //case 01 Register a Passenger
         public static void RegisterPassenger()
         {
             Console.WriteLine("Enter passenger name: ");
@@ -62,7 +62,7 @@ namespace FlightManagementSystem
         }
 
 
-        //02 Add an Aircraft
+        //case 02 Add an Aircraft
         public static void AddAircraft()
         {
             
@@ -93,7 +93,7 @@ namespace FlightManagementSystem
         }
 
 
-        //03 Register a Pilot
+        //case 03 Register a Pilot
         public static void registerPiolt()
         {
             Console.WriteLine("Enter Piolt name: ");
@@ -132,6 +132,30 @@ namespace FlightManagementSystem
             Console.WriteLine($"Pilot ID: {pioltID}");
 
         }
+
+
+        //case 04 View All Flights
+        public static void ViewFlights()
+        {
+            Console.WriteLine("All Flights");
+            foreach (Flight flight in context.Flights)
+            {
+                Console.WriteLine(
+                    $"Id: {flight.flightId} | " +
+                    $"Flight code: {flight.flightCode} | " +
+                    $"origin: {flight.origin} | " +
+                    $"destenation: {flight.destination} | " +
+                    $"date: {flight.departureDate} | " +
+                    $"time: {flight.departureTime} | " +
+                    $"available seats: {flight.availableSeats} | " +
+                    $"ticket Price: {flight.ticketPrice} | " +
+                    $"status: {flight.status}"
+
+                    );
+            }
+
+        }
+
 
 
 
@@ -188,7 +212,8 @@ namespace FlightManagementSystem
                     case 3:
                         registerPiolt();
                         break;
-                    case 4: 
+                    case 4:
+                        ViewFlights();
                         break;
                     case 5:
                         break;
