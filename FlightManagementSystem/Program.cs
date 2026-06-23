@@ -77,7 +77,7 @@ namespace FlightManagementSystem
             Console.WriteLine("Enter total seats: ");
             int totalSeats = int.Parse(Console.ReadLine());
           
-            int aircraftId = context.Passengers.Count + 1;
+            int aircraftId = context.Aircrafts.Count + 1;
             context.Aircrafts.Add(
                 new Aircraft
                 {
@@ -153,16 +153,80 @@ namespace FlightManagementSystem
 
                     );
             }
-
         }
 
 
 
+        //case 05 Schedule a Flight
+        //aircraft + piolt + flight
+        public static void scheduleFlight()
+        {
+            Console.Write("Enter Aircraft ID: ");
+            int aircraftId = int.Parse(Console.ReadLine());
+            // check if aircraft is operational or not
+            //get from context
+            Aircraft air = context.Aircrafts.FirstOrDefault(a => a.aircraftId == aircraftId);
+            if(air.isOperational == false)
+            {
+                Console.WriteLine("Aircraft is not operational!");
+                return;
+            }
 
 
 
+            Console.WriteLine("Enter Piolt id: ");
+            int pioltId = int.Parse(Console.ReadLine());
+            //check if piolt is available 
+            Pilot pio = context.Pilots.FirstOrDefault(p => p.pilotId == pioltId);
+            if(pio.isAvailable == false)
+            {
+                Console.WriteLine("pilot not found!");
+                return;
+            }
 
 
+            Console.Write("Enter origin: ");
+            string origin = Console.ReadLine();
+
+            Console.Write("Enter destination: ");
+            string destination = Console.ReadLine();
+
+            Console.Write("Enter departure date: ");
+            string departureDate = Console.ReadLine();
+
+            Console.Write("Enter departure time: ");
+            string departureTime = Console.ReadLine();
+
+            Console.Write("Enter ticket price: ");
+            decimal ticketPrice = decimal.Parse(Console.ReadLine());
+
+
+            int flightid = context.Flights.Count + 1;
+            string Code = $"OA- +{flightid} ";
+            context.Flights.Add(
+                new Flight
+                {
+                    flightId = flightid,
+                    flightCode = Code,
+                    aircraftId = aircraftId,
+                    pilotId = pioltId,
+                    origin = origin,
+                    destination = destination,
+                    departureDate = departureDate,
+                    departureTime = departureTime,
+                    ticketPrice = ticketPrice
+
+                }
+                );
+
+            pio.isAvailable = false;
+
+            Console.WriteLine("Flight scheduled successfully!");
+            Console.WriteLine($"Flight Code: {Code}");
+           
+
+
+        }
 
 
 
@@ -203,6 +267,7 @@ namespace FlightManagementSystem
                 int option = int.Parse(Console.ReadLine());
                 switch (option)
                 {
+                    //easy
                     case 1:
                         RegisterPassenger();
                         break;
@@ -215,7 +280,10 @@ namespace FlightManagementSystem
                     case 4:
                         ViewFlights();
                         break;
+
+                        //meduim
                     case 5:
+                        scheduleFlight();
                         break;
                     case 6:
                         break;
@@ -223,6 +291,8 @@ namespace FlightManagementSystem
                         break;
                     case 8:
                         break;
+
+                        //hard
                     case 9:
                         break;
                     case 10: 
