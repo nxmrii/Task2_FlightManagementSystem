@@ -15,10 +15,60 @@ namespace FlightManagementSystem
         };
 
 
-
+        //01 Register a Passenger
         public static void RegisterPassenger()
         {
+            Console.WriteLine("Enter passenger name: ");
+            string name = Console.ReadLine();
 
+            //validtion for name -> cannot be empty
+            if (name == null)
+            {
+                Console.WriteLine("passanger name cannot be empty");
+                return;
+            }
+
+
+                Console.WriteLine("Enter passenger email: ");
+            string email = Console.ReadLine();
+
+            Console.WriteLine("Enter passenger phone: ");
+            string phone = Console.ReadLine();
+
+            Console.WriteLine("Enter passport number: ");
+            string pasportnum = Console.ReadLine();
+
+            Console.Write("Enter nationality: ");
+            string nationality = Console.ReadLine();
+
+
+
+            int passengerId = context.Passengers.Count + 1;
+            context.Passengers.Add(
+                new Passenger
+                {
+                    passengerId = passengerId,
+                    passengerName = name,
+                    passengerEmail = email,
+                    passengerPhone = phone,
+                    passportNumber = pasportnum,
+                    nationality = nationality
+                }
+                );
+
+            Console.WriteLine("Passenger registered successfully!");
+            Console.WriteLine($"Assigned ID: {passengerId}");
+
+        }
+
+
+        //02 Add an Aircraft
+        public static void AddAircraft()
+        {
+            Console.WriteLine("Enter model: ");
+
+
+            int aircraftId = context.Passengers.Count + 1;
         }
 
 
@@ -73,6 +123,7 @@ namespace FlightManagementSystem
                 switch (option)
                 {
                     case 1:
+                        RegisterPassenger();
                         break;
                     case 2:
                         break;
@@ -113,7 +164,7 @@ namespace FlightManagementSystem
 
     
     }
-}
+}}
 
 
 
