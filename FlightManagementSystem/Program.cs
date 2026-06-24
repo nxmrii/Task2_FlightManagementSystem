@@ -218,7 +218,7 @@ namespace FlightManagementSystem
                     departureTime = departureTime,
                     ticketPrice = ticketPrice,
                     availableSeats = air.totalSeats,
-                    status = "Schedueled"
+                    status = "Scheduled"
 
                 }
                 );
@@ -315,8 +315,32 @@ namespace FlightManagementSystem
 
 
 
-       
+        //case 07 Cancel a Booking
+        public static void cancelBooking()
+        {
+            Console.WriteLine("Enter booking id: ");
+            int bookid = int.Parse(Console.ReadLine());
+            Booking booking = context.Bookings.FirstOrDefault(b=> b.bookingId == bookid);
+            if( booking == null) {
+                Console.WriteLine("not found");
+                return;
+            }
+            if(booking.status == "cancelled")
+            {
+                Console.WriteLine("already cancelled");
+                return;
+            }
 
+            Flight flight = context.Flights.FirstOrDefault(f=> f.flightId == booking.flightId);
+            booking.status = "cancelled";
+
+            if (flight != null) { 
+            flight.availableSeats++;
+            }
+
+            Console.WriteLine("booking is sucussfuly cancelled");
+
+        }
 
 
 
@@ -370,8 +394,10 @@ namespace FlightManagementSystem
                         scheduleFlight();
                         break;
                     case 6:
+                        bookFlight();
                         break;
                     case 7:
+                        cancelBooking();
                         break;
                     case 8:
                         break;
@@ -402,7 +428,7 @@ namespace FlightManagementSystem
 
     
     }
-}
+}}
 
 
 
