@@ -113,7 +113,8 @@ namespace FlightManagementSystem
             Console.WriteLine("Enter License number: ");
             string licensnum = Console.ReadLine();
 
-
+            Console.WriteLine("Enter Flight hours: ");
+            int flight_hours = int.Parse(Console.ReadLine());
 
 
             int pioltID = context.Pilots.Count + 1;
@@ -124,7 +125,7 @@ namespace FlightManagementSystem
                     pilotName = pioltname,
                     pilotPhone = pioltphone,
                     licenseNumber = licensnum,
-                    flightHours = 0,
+                    flightHours = flight_hours,
                     isAvailable = true
                    
                 }
@@ -350,7 +351,7 @@ namespace FlightManagementSystem
             int flightId = int.Parse(Console.ReadLine());
             //find the flight 
             Flight flight = context.Flights.FirstOrDefault(f => f.flightId == flightId);
-            if (flight != null)
+            if (flight == null)
             {
                 Console.WriteLine("flight not found!");
                 return;
@@ -379,7 +380,11 @@ namespace FlightManagementSystem
                 pilot.isAvailable = true;
             }
             Console.WriteLine("flight departed successfully!");
+            Console.WriteLine("Pilot's total flight hours  " +pilot.flightHours);
         }
+
+
+        //case 09 Cancel a Flight
 
 
         static void Main(string[] args)
@@ -399,7 +404,7 @@ namespace FlightManagementSystem
                 Console.WriteLine(" 5. Schedule a Flight");//done
                 Console.WriteLine(" 6. Book a Flight");//done
                 Console.WriteLine(" 7. Cancel a Booking");//done
-                Console.WriteLine(" 8. Depart a Flight");
+                Console.WriteLine(" 8. Depart a Flight");//done
                 Console.WriteLine(" 9. Cancel a Flight");
                 Console.WriteLine(" 10. Passenger Booking History");
                 Console.WriteLine(" 11. Flight Revenue & Load Factor Report");
@@ -434,6 +439,7 @@ namespace FlightManagementSystem
                         cancelBooking();
                         break;
                     case 8:
+                        departFlight();
                         break;
 
                         //hard
