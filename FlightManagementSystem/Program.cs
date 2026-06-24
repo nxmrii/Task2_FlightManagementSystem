@@ -89,7 +89,8 @@ namespace FlightManagementSystem
 
             Console.WriteLine("Aircraft added successfully!");
             Console.WriteLine($"Aircraft ID: {aircraftId}");
-            Console.WriteLine("Status: Operational");
+       
+
         }
 
 
@@ -125,6 +126,7 @@ namespace FlightManagementSystem
                     licenseNumber = licensnum,
                     flightHours = 0,
                     isAvailable = true
+                   
                 }
         );
 
@@ -202,7 +204,7 @@ namespace FlightManagementSystem
 
 
             int flightid = context.Flights.Count + 1;
-            string Code = $"OA- +{flightid} ";
+            string Code = $"OA- {flightid} ";
             context.Flights.Add(
                 new Flight
                 {
@@ -214,7 +216,9 @@ namespace FlightManagementSystem
                     destination = destination,
                     departureDate = departureDate,
                     departureTime = departureTime,
-                    ticketPrice = ticketPrice
+                    ticketPrice = ticketPrice,
+                    availableSeats = air.totalSeats,
+                    status = "Schedueled"
 
                 }
                 );
@@ -230,8 +234,88 @@ namespace FlightManagementSystem
 
 
 
+        //case 06 Book Flight
+        public static void bookFlight()
+        {
+            //to book flight first u want to find passenger
+            Console.WriteLine("Enter passenger id: ");
+            int passengerId = int.Parse(Console.ReadLine());
+            //now check if passenger #1 exists
+            Passenger passenger = context.Passengers.FirstOrDefault(p => p.passengerId == passengerId);
+            if (passenger == null)
+            {
+                Console.WriteLine("passenger not found!");
+                return;
+            }
+
+            //ask where they want to go
+            Console.WriteLine("Enter destination: ");
+            string distination = Console.ReadLine();
+            //Show flights going there, Look through all flights and find: distenation, status and seats available
+            List<Flight> availableSeats = 
+                context.Flights.Where(f => f.destination.Equals(distination.ToString())
+                && f.status == "Scheduled"
+                && f.availableSeats > 0).ToList();
+            // then check availability
+            if (availableSeats.Count == 0)
+            {
+                Console.WriteLine("no available flights found");
+                return;
+            }
+            //print available flight 
+            Console.WriteLine("Available Flight: ");
+            foreach (Flight f in availableSeats)
+            {
+                Console.WriteLine(
+                    $"Id: {f.flightId} | " +
+                    $"code: {f.flightCode} | " +
+                    $"from: {f.origin} | " +
+                    $"to: {f.destination} | " +
+                    $"date: {f.departureDate} | " +
+                    $"time: {f.departureTime} | " +
+                    $"seats: {f.availableSeats} | " +
+                    $"price: {f.ticketPrice} | "
+                    );
+            }
+            
+            //choose flight and get it by id
+            Console.WriteLine("Enter flight id: ");
+            int flightId = int.Parse(Console.ReadLine());
+            //find flight by id
+            Flight choosflight = availableSeats.FirstOrDefault(f => f.flightId == flightId);
+
+            // a seat label is assigned -> for passenger to know which seat will sit
+            Aircraft aircraft = context.Aircrafts.First(a => a.aircraftId == choosflight.aircraftId);
+            int seatNum = aircraft.totalSeats - choosflight.availableSeats + 1;
+            string seatLabel = $"S{seatNum}";
+
+            int bookingId = context.Bookings.Count + 1;
+            //Create booking
+            context.Bookings.Add(new Booking
+            {
+                bookingId = bookingId,
+                passengerId = passengerId,
+                flightId = flightId,
+                seatNumber = seatLabel,
+                //totalprice for the booking is taken from the flight's ticket price.
+                totalPrice = choosflight.ticketPrice,
+                bookingDate = DateTime.Now.ToString(),
+                status = "confirmed"
+            });
+
+            // flight's available seat count decreases by one
+            choosflight.availableSeats--;
+
+            //print
+            Console.WriteLine("Booking created successfully!");
+            Console.WriteLine($"Booking id: {bookingId}");
+            Console.WriteLine($"seat: {seatLabel}");
+            Console.WriteLine($"total price: {choosflight.ticketPrice}");
+        }
 
 
+
+       
 
 
 
