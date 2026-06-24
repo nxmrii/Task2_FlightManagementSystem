@@ -343,9 +343,43 @@ namespace FlightManagementSystem
         }
 
 
+        //case 08 Depart a Flight
+        public static void departFlight()
+        {
+            Console.Write("Enter Flight ID: ");
+            int flightId = int.Parse(Console.ReadLine());
+            //find the flight 
+            Flight flight = context.Flights.FirstOrDefault(f => f.flightId == flightId);
+            if (flight != null)
+            {
+                Console.WriteLine("flight not found!");
+                return;
+            }
+
+            //make sure it is scheduled
+            if(flight.status != "Scheduled")
+            {
+                Console.WriteLine("flight cannot depart");
+                return;
+            }
 
 
+            //update pilot hours
+            Pilot pilot = context.Pilots.FirstOrDefault(p => p.pilotId == flight.pilotId);
 
+            //then mark it as departed
+            flight.status = "Departed";
+
+            if(pilot != null)
+            {
+                Console.WriteLine("enter flihgt duration: ");
+                int h = int.Parse(Console.ReadLine());
+
+                pilot.flightHours += h;
+                pilot.isAvailable = true;
+            }
+            Console.WriteLine("flight departed successfully!");
+        }
 
 
         static void Main(string[] args)
@@ -362,9 +396,9 @@ namespace FlightManagementSystem
                 Console.WriteLine(" 2. Add an Aircraf"); //done
                 Console.WriteLine(" 3. Register a Pilot"); //done
                 Console.WriteLine(" 4. View All Flights"); //done
-                Console.WriteLine(" 5. Schedule a Flight");
-                Console.WriteLine(" 6. Book a Flight");
-                Console.WriteLine(" 7. Cancel a Booking");
+                Console.WriteLine(" 5. Schedule a Flight");//done
+                Console.WriteLine(" 6. Book a Flight");//done
+                Console.WriteLine(" 7. Cancel a Booking");//done
                 Console.WriteLine(" 8. Depart a Flight");
                 Console.WriteLine(" 9. Cancel a Flight");
                 Console.WriteLine(" 10. Passenger Booking History");
@@ -428,7 +462,7 @@ namespace FlightManagementSystem
 
     
     }
-}}
+}
 
 
 
