@@ -234,7 +234,6 @@ namespace FlightManagementSystem
         }
 
 
-
         //case 06 Book Flight
         public static void bookFlight()
         {
@@ -385,6 +384,70 @@ namespace FlightManagementSystem
 
 
         //case 09 Cancel a Flight
+        public static void cancelFlight()
+        {
+            //ask for flihgt id
+            Console.WriteLine("Enter flight id: ");
+            int flightid = int.Parse(Console.ReadLine());
+
+            //find flight
+            Flight flight = context.Flights.FirstOrDefault(f => f.flightId == flightid);
+            if (flight == null)
+            {
+                Console.WriteLine("flight not found");
+                return;
+            }
+
+            //check if its cancelled
+            if(flight.status == "cancelled")
+            {
+                Console.WriteLine("flight already cancelled");
+                return;
+            }
+
+            flight.status = "cancelled";
+            //Find all confirmed bookings for that flight
+            var bookings = context.Bookings.Where(e => e.flightId == flightid 
+            && e.status.Equals("confirmed", StringComparison.OrdinalIgnoreCase)).ToList(); //converts the boolean result to a string
+
+            //cancel flight and count how many were affected
+            int bookEffcet = 0;
+            foreach(Booking booking in bookings)
+            {
+                booking.status = "cancelled";  //set booking status => cancelled
+                bookEffcet++;
+            }
+
+            //make pilot available again
+            Pilot pilot = context.Pilots.FirstOrDefault(p => p.pilotId == flight.pilotId);
+            if(pilot != null)
+            {
+                pilot.isAvailable = true;
+            }
+
+            Console.WriteLine("Flight cancelled successfully!");
+            Console.WriteLine($"Affected bookings: {bookEffcet}");
+        }
+
+
+        //case 10 Passenger Booking History
+        public static void passengerHistory()
+        {
+            //ask for passenger id
+            Console.WriteLine("Enter passenger id: ");
+            int passid = int.Parse(Console.ReadLine());
+
+            //check passenger exict
+        }
+
+
+
+
+
+
+
+
+
 
 
         static void Main(string[] args)
@@ -405,7 +468,7 @@ namespace FlightManagementSystem
                 Console.WriteLine(" 6. Book a Flight");//done
                 Console.WriteLine(" 7. Cancel a Booking");//done
                 Console.WriteLine(" 8. Depart a Flight");//done
-                Console.WriteLine(" 9. Cancel a Flight");
+                Console.WriteLine(" 9. Cancel a Flight");//done
                 Console.WriteLine(" 10. Passenger Booking History");
                 Console.WriteLine(" 11. Flight Revenue & Load Factor Report");
                 Console.WriteLine(" 0.  Exit");
@@ -444,6 +507,7 @@ namespace FlightManagementSystem
 
                         //hard
                     case 9:
+                        cancelFlight();
                         break;
                     case 10: 
                         break;
