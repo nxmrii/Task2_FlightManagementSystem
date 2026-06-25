@@ -438,8 +438,91 @@ namespace FlightManagementSystem
             int passid = int.Parse(Console.ReadLine());
 
             //check passenger exict
+            Passenger passenger = context.Passengers.FirstOrDefault(p => p.passengerId == passid);
+            if(passenger == null) {
+                Console.WriteLine("passenger not found");
+                return;
+            }
+
+            //get all bookings for this passenger
+            var bookings = context.Bookings.Where(b => b.passengerId == passid).ToList();
+            if(bookings.Count == 0)
+            {
+                Console.WriteLine("no booking history found");
+                return;
+            }
+            decimal totAmountSpent = 0;
+
+
+            Console.WriteLine($"Bookings History for {passenger.passengerName} ");
+            foreach (Booking booking in bookings)
+            {
+                Flight flight = context.Flights.FirstOrDefault(f => f.flightId == booking.flightId);
+                if (flight != null)
+                {
+                    Console.WriteLine(
+                        $"code: {flight.flightCode} | " +
+                        $"orign: {flight.origin} | " +
+                        $"destination: {flight.destination} | " +
+                        $"date: {flight.departureDate} | " +
+                        $"seat: {booking.seatNumber} | " +
+                        $"price: {booking.totalPrice} | " +
+                        $"status: {booking.status}"
+                    );
+                }
+
+                //add only "confirmed" bookings
+                if (booking.status.Contains("confirmed"))
+                {
+                    totAmountSpent += booking.totalPrice;
+                }
+            }
+
+            Console.WriteLine($"total spent = {totAmountSpent}");
         }
 
+
+
+        //case 11  Flight Revenue & Load Factor Report
+        public static void flightreport()
+        {
+            decimal grandtotRevenue = 0;
+            foreach (Flight flight in context.Flights)
+            {
+                int confirmBook = 0;
+                decimal revenue = 0;
+
+                foreach(Booking booking in context.Bookings)
+                {
+                    if(booking.flightId == flight.flightId && booking.status == "confirmed")
+                    {
+                        confirmBook++;
+                        revenue += booking.totalPrice;
+                    }
+                }
+
+                //get aircraft to know total seats
+                Aircraft aircraft = context.Aircrafts.FirstOrDefault(a => a.aircraftId == flight.aircraftId);
+                double loadfactor = 0;
+                double confirmbook = confirmBook;
+                if(aircraft != null)
+                {
+                    loadfactor = (confirmbook / aircraft.totalSeats) * 100;
+                }
+
+                //print report
+                Console.WriteLine(
+                    $"Flight Code: {flight.flightCode} | " +
+                    $"Route: {flight.origin} -> {flight.destination} | " +
+                    $"Bookings: {confirmBook} | " +
+                    $"Revenue: {revenue} | " +
+                    $"Load Factor: {loadfactor:F2}%"
+                    );
+
+                grandtotRevenue += revenue;
+            }
+            Console.WriteLine($"Grand Total Revenue: {grandtotRevenue}");
+        }
 
 
 
@@ -469,7 +552,7 @@ namespace FlightManagementSystem
                 Console.WriteLine(" 7. Cancel a Booking");//done
                 Console.WriteLine(" 8. Depart a Flight");//done
                 Console.WriteLine(" 9. Cancel a Flight");//done
-                Console.WriteLine(" 10. Passenger Booking History");
+                Console.WriteLine(" 10. Passenger Booking History");//done
                 Console.WriteLine(" 11. Flight Revenue & Load Factor Report");
                 Console.WriteLine(" 0.  Exit");
                 Console.Write("Select option: ");
@@ -510,6 +593,7 @@ namespace FlightManagementSystem
                         cancelFlight();
                         break;
                     case 10: 
+                        passengerHistory();
                         break;
                     case 11:
                         break;
